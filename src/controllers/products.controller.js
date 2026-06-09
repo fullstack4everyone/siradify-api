@@ -3,7 +3,7 @@ const pool = require('../config/db')
 const getProducts = async (req, res) => {
   try {
     const products = await pool.query(
-      'SELECT * FROM products ORDER BY created_at DESC'
+      'SELECT id, name, CAST(price AS FLOAT) as price, stock, category, business_id, created_at FROM products ORDER BY created_at DESC'
     )
     res.status(200).json(products.rows)
   } catch (error) {
@@ -22,7 +22,7 @@ const createProduct = async (req, res) => {
 
     const newProduct = await pool.query(
       'INSERT INTO products (name, price, stock, category, business_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [name, price, stock || 0, category || 'general', req.user.id]
+      [name, parseFloat(price), stock || 0, category || 'general', req.user.id]
     )
 
     res.status(201).json({
@@ -43,7 +43,7 @@ const updateProduct = async (req, res) => {
 
     const updated = await pool.query(
       'UPDATE products SET name=$1, price=$2, stock=$3, category=$4 WHERE id=$5 RETURNING *',
-      [name, price, stock, category, id]
+      [name, parseFloat(price), stock, category, id]
     )
 
     if (updated.rows.length === 0) {
