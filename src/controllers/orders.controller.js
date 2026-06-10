@@ -25,16 +25,21 @@ const createOrder = async (req, res) => {
         'INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($1, $2, $3, $4)',
         [orderId, item.product_id, item.quantity, item.price]
       )
-
       await pool.query(
         'UPDATE products SET stock = stock - $1 WHERE id = $2',
         [item.quantity, item.product_id]
       )
     }
 
+    const orderItems = await pool.query(
+      'SELECT oi.*, p.name FROM order_items oi JOIN products p ON oi.product_id = p.id WHERE oi.order_id = $1',
+      [orderId]
+    )
+
     res.status(201).json({
       message: 'Order created successfully',
-      order: newOrder.rows[0]
+      order: newOrder.rows[0],
+      items: orderItems.rows
     })
 
   } catch (error) {
