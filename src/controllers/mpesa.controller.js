@@ -26,13 +26,22 @@ const stkPush = async (req, res) => {
       return res.status(400).json({ message: 'Phone and amount are required' })
     }
 
-    const formattedPhone = phone.startsWith('0')
-      ? '254' + phone.slice(1)
-      : phone.startsWith('+')
-      ? phone.slice(1)
-      : phone
+    let formattedPhone = phone.toString().trim()
+    if (formattedPhone.startsWith('+')) {
+      formattedPhone = formattedPhone.slice(1)
+    } else if (formattedPhone.startsWith('0')) {
+      formattedPhone = '254' + formattedPhone.slice(1)
+    } else if (!formattedPhone.startsWith('254')) {
+      formattedPhone = '254' + formattedPhone
+    }
+
+    console.log('Formatted phone:', formattedPhone)
+    console.log('Amount:', Math.ceil(amount))
+    console.log('Shortcode:', process.env.MPESA_SHORTCODE)
+    console.log('Callback URL:', process.env.MPESA_CALLBACK_URL)
 
     const accessToken = await getAccessToken()
+    console.log('Access token obtained successfully')
 
     const timestamp = new Date()
       .toISOString()
@@ -43,21 +52,25 @@ const stkPush = async (req, res) => {
       `${process.env.MPESA_SHORTCODE}${process.env.MPESA_PASSKEY}${timestamp}`
     ).toString('base64')
 
+    const payload = {
+      BusinessShortCode: process.env.MPESA_SHORTCODE,
+      Password: password,
+      Timestamp: timestamp,
+      TransactionType: 'CustomerPayBillOnline',
+      Amount: Math.ceil(amount),
+      PartyA: formattedPhone,
+      PartyB: process.env.MPESA_SHORTCODE,
+      PhoneNumber: formattedPhone,
+      CallBackURL: process.env.MPESA_CALLBACK_URL,
+      AccountReference: `Siradify-${order_id || 'POS'}`,
+      TransactionDesc: 'Payment for goods',
+    }
+
+    console.log('STK Push payload:', JSON.stringify(payload))
+
     const response = await axios.post(
       'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest',
-      {
-        BusinessShortCode: process.env.MPESA_SHORTCODE,
-        Password: password,
-        Timestamp: timestamp,
-        TransactionType: 'CustomerPayBillOnline',
-        Amount: Math.ceil(amount),
-        PartyA: formattedPhone,
-        PartyB: process.env.MPESA_SHORTCODE,
-        PhoneNumber: formattedPhone,
-        CallBackURL: process.env.MPESA_CALLBACK_URL,
-        AccountReference: `Siradify-${order_id || 'POS'}`,
-        TransactionDesc: 'Payment for goods',
-      },
+      payload,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -65,13 +78,16 @@ const stkPush = async (req, res) => {
       }
     )
 
+    console.log('STK Push response:', JSON.stringify(response.data))
+
     res.status(200).json({
       message: 'STK Push sent successfully',
       data: response.data,
     })
 
   } catch (error) {
-    console.error('M-Pesa error:', error.response?.data || error.message)
+    console.error('M-Pesa error details:', JSON.stringify(error.response?.data))
+    console.error('M-Pesa error message:', error.message)
     res.status(500).json({
       message: 'M-Pesa request failed',
       error: error.response?.data || error.message,
