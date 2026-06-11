@@ -22,7 +22,7 @@ const createProduct = async (req, res) => {
 
     const newProduct = await pool.query(
       'INSERT INTO products (name, price, stock, category, business_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [name, parseFloat(price), stock || 0, category || 'general', req.user.id]
+      [name, parseFloat(price), stock || 0, category || 'other', 1]
     )
 
     res.status(201).json({
