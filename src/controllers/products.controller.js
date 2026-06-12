@@ -3,7 +3,7 @@ const pool = require('../config/db')
 const getProducts = async (req, res) => {
   try {
     const products = await pool.query(
-      'SELECT id, name, CAST(price AS FLOAT) as price, stock, category, business_id, created_at FROM products ORDER BY created_at DESC'
+      'SELECT id, name, CAST(price AS FLOAT) as price, stock, category, image_url, business_id, created_at FROM products ORDER BY created_at DESC'
     )
     res.status(200).json(products.rows)
   } catch (error) {
@@ -14,15 +14,15 @@ const getProducts = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
-    const { name, price, stock, category } = req.body
+    const { name, price, stock, category, image_url } = req.body
 
     if (!name || !price) {
       return res.status(400).json({ message: 'Name and price are required' })
     }
 
     const newProduct = await pool.query(
-      'INSERT INTO products (name, price, stock, category, business_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [name, parseFloat(price), stock || 0, category || 'other', 1]
+      'INSERT INTO products (name, price, stock, category, image_url, business_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [name, parseFloat(price), stock || 0, category || 'other', image_url || null, 1]
     )
 
     res.status(201).json({
@@ -39,11 +39,11 @@ const createProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
     const { id } = req.params
-    const { name, price, stock, category } = req.body
+    const { name, price, stock, category, image_url } = req.body
 
     const updated = await pool.query(
-      'UPDATE products SET name=$1, price=$2, stock=$3, category=$4 WHERE id=$5 RETURNING *',
-      [name, parseFloat(price), stock, category, id]
+      'UPDATE products SET name=$1, price=$2, stock=$3, category=$4, image_url=$5 WHERE id=$6 RETURNING *',
+      [name, parseFloat(price), stock, category, image_url || null, id]
     )
 
     if (updated.rows.length === 0) {
