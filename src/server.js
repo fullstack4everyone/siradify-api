@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 app.get('/api/test-report', async (req, res) => {
   try {
     await sendDailyReport()
-    res.json({ message: 'Daily report sent successfully to msiradfarah@gmail.com' })
+    res.json({ message: `Daily report sent successfully to ${process.env.REPORT_EMAIL}` })
   } catch (err) {
     res.status(500).json({ message: 'Failed to send report', error: err.message })
   }
