@@ -7,6 +7,7 @@ const authRoutes = require('./routes/auth.routes')
 const productRoutes = require('./routes/products.routes')
 const orderRoutes = require('./routes/orders.routes')
 const mpesaRoutes = require('./routes/mpesa.routes')
+const { scheduleDailyReport } = require('./services/emailReport')
 
 const app = express()
 
@@ -33,8 +34,7 @@ const PORT = process.env.PORT || 5000
 
 app.listen(PORT, () => {
   console.log(`Siradify API running on port ${PORT}`)
+  scheduleDailyReport()
 })
 
 module.exports = app
-
-
