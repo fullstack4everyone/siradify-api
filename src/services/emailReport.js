@@ -40,11 +40,15 @@ const sendDailyReport = async () => {
       <div style="background: #FEF3C7; border-radius: 8px; padding: 16px; margin-top: 20px; border-left: 4px solid #F59E0B;">
         <h3 style="color: #92400E; font-size: 14px; font-weight: 700; margin: 0 0 12px;">⚠️ Low Stock Alert</h3>
         ${lowStockProducts.map(p => `
-          <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
-            <span style="font-size: 13px; color: #92400E;">${p.name}</span>
-            <span style="font-size: 13px; font-weight: 700; color: ${p.stock === 0 ? '#DC2626' : '#92400E'};">
-              ${p.stock === 0 ? 'Out of stock' : `${p.stock} left`}
-            </span>
+          <div style="padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="font-size: 13px; color: #92400E;">${p.name}</td>
+                <td style="text-align: right; font-size: 13px; font-weight: 700; color: ${p.stock === 0 ? '#DC2626' : '#92400E'};">
+                  ${p.stock === 0 ? 'Out of stock' : `${p.stock} left`}
+                </td>
+              </tr>
+            </table>
           </div>
         `).join('')}
       </div>
@@ -61,7 +65,7 @@ const sendDailyReport = async () => {
         <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
 
           <div style="background: #0A1F44; border-radius: 12px 12px 0 0; padding: 24px; text-align: center;">
-            <div style="width: 50px; height: 50px; background: #F5A623; border-radius: 12px; margin: 0 auto 12px; line-height: 50px;">
+            <div style="width: 50px; height: 50px; background: #F5A623; border-radius: 12px; margin: 0 auto 12px; line-height: 50px; text-align: center;">
               <span style="color: #0A1F44; font-weight: 800; font-size: 24px;">S</span>
             </div>
             <h1 style="color: #fff; font-size: 20px; font-weight: 700; margin: 0 0 4px;">Siradify POS</h1>
@@ -130,7 +134,7 @@ const sendDailyReport = async () => {
             ${lowStockHTML}
 
             <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #E5E7EB; text-align: center;">
-              <a href="https://siradify-pos.vercel.app" style="background: #0A1F44; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600;">
+              <a href="https://siradify-pos.vercel.app" style="background: #0A1F44; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; display: inline-block;">
                 View Full Dashboard
               </a>
             </div>
@@ -146,15 +150,15 @@ const sendDailyReport = async () => {
 
     const result = await resend.emails.send({
       from: 'Siradify POS <onboarding@resend.dev>',
-      to: 'awsirloved2@gmail.com',
+      to: process.env.REPORT_EMAIL,
       subject: `Siradify Daily Report - ${dateStr} - KES ${totalRevenue.toLocaleString()}`,
       html,
     })
 
-    console.log('Daily report sent:', result)
+    console.log('Daily report sent:', JSON.stringify(result))
 
   } catch (error) {
-    console.error('Failed to send daily report:', error)
+    console.error('Failed to send daily report:', error.message)
     throw error
   }
 }
