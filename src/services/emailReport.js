@@ -61,8 +61,8 @@ const sendDailyReport = async () => {
         <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
 
           <div style="background: #0A1F44; border-radius: 12px 12px 0 0; padding: 24px; text-align: center;">
-            <div style="width: 50px; height: 50px; background: #F5A623; border-radius: 12px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center;">
-              <span style="color: #0A1F44; font-weight: 800; font-size: 24px; line-height: 50px; display: block;">S</span>
+            <div style="width: 50px; height: 50px; background: #F5A623; border-radius: 12px; margin: 0 auto 12px; line-height: 50px;">
+              <span style="color: #0A1F44; font-weight: 800; font-size: 24px;">S</span>
             </div>
             <h1 style="color: #fff; font-size: 20px; font-weight: 700; margin: 0 0 4px;">Siradify POS</h1>
             <p style="color: #F5A623; font-size: 11px; margin: 0; letter-spacing: 2px;">FROM VISION TO REALITY</p>
@@ -72,41 +72,59 @@ const sendDailyReport = async () => {
             <h2 style="color: #0A1F44; font-size: 18px; font-weight: 700; margin: 0 0 4px;">Daily Sales Report</h2>
             <p style="color: #6B7280; font-size: 13px; margin: 0 0 24px;">${dateStr}</p>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
-              <div style="background: #F4F6F9; border-radius: 10px; padding: 16px; border-left: 4px solid #F5A623;">
-                <p style="color: #6B7280; font-size: 11px; margin: 0 0 4px; font-weight: 500;">TOTAL REVENUE</p>
-                <p style="color: #0A1F44; font-size: 22px; font-weight: 800; margin: 0;">KES ${totalRevenue.toLocaleString()}</p>
-              </div>
-              <div style="background: #F4F6F9; border-radius: 10px; padding: 16px; border-left: 4px solid #0A1F44;">
-                <p style="color: #6B7280; font-size: 11px; margin: 0 0 4px; font-weight: 500;">TOTAL ORDERS</p>
-                <p style="color: #0A1F44; font-size: 22px; font-weight: 800; margin: 0;">${orders.length}</p>
-              </div>
-              <div style="background: #F4F6F9; border-radius: 10px; padding: 16px; border-left: 4px solid #10B981;">
-                <p style="color: #6B7280; font-size: 11px; margin: 0 0 4px; font-weight: 500;">PAID</p>
-                <p style="color: #10B981; font-size: 22px; font-weight: 800; margin: 0;">${paidOrders.length}</p>
-              </div>
-              <div style="background: #F4F6F9; border-radius: 10px; padding: 16px; border-left: 4px solid #EF4444;">
-                <p style="color: #6B7280; font-size: 11px; margin: 0 0 4px; font-weight: 500;">PENDING</p>
-                <p style="color: #EF4444; font-size: 22px; font-weight: 800; margin: 0;">${pendingOrders.length}</p>
-              </div>
-            </div>
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 24px;">
+              <tr>
+                <td width="50%" style="padding-right: 6px;">
+                  <div style="background: #F4F6F9; border-radius: 10px; padding: 16px; border-left: 4px solid #F5A623;">
+                    <p style="color: #6B7280; font-size: 11px; margin: 0 0 4px; font-weight: 500;">TOTAL REVENUE</p>
+                    <p style="color: #0A1F44; font-size: 22px; font-weight: 800; margin: 0;">KES ${totalRevenue.toLocaleString()}</p>
+                  </div>
+                </td>
+                <td width="50%" style="padding-left: 6px;">
+                  <div style="background: #F4F6F9; border-radius: 10px; padding: 16px; border-left: 4px solid #0A1F44;">
+                    <p style="color: #6B7280; font-size: 11px; margin: 0 0 4px; font-weight: 500;">TOTAL ORDERS</p>
+                    <p style="color: #0A1F44; font-size: 22px; font-weight: 800; margin: 0;">${orders.length}</p>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td width="50%" style="padding-right: 6px; padding-top: 12px;">
+                  <div style="background: #F4F6F9; border-radius: 10px; padding: 16px; border-left: 4px solid #10B981;">
+                    <p style="color: #6B7280; font-size: 11px; margin: 0 0 4px; font-weight: 500;">PAID</p>
+                    <p style="color: #10B981; font-size: 22px; font-weight: 800; margin: 0;">${paidOrders.length}</p>
+                  </div>
+                </td>
+                <td width="50%" style="padding-left: 6px; padding-top: 12px;">
+                  <div style="background: #F4F6F9; border-radius: 10px; padding: 16px; border-left: 4px solid #EF4444;">
+                    <p style="color: #6B7280; font-size: 11px; margin: 0 0 4px; font-weight: 500;">PENDING</p>
+                    <p style="color: #EF4444; font-size: 22px; font-weight: 800; margin: 0;">${pendingOrders.length}</p>
+                  </div>
+                </td>
+              </tr>
+            </table>
 
             <h3 style="color: #0A1F44; font-size: 14px; font-weight: 700; margin: 0 0 12px;">Payment Breakdown</h3>
             <div style="background: #F4F6F9; border-radius: 10px; padding: 16px; margin-bottom: 20px;">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #E5E7EB;">
-                <span style="font-size: 13px; color: #374151;">📱 M-Pesa</span>
-                <div style="text-align: right;">
-                  <span style="font-size: 13px; font-weight: 700; color: #0A1F44;">KES ${mpesaRevenue.toLocaleString()}</span>
-                  <span style="font-size: 11px; color: #6B7280; margin-left: 8px;">${mpesaOrders.length} orders</span>
-                </div>
+              <div style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #E5E7EB;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="font-size: 13px; color: #374151;">📱 M-Pesa</td>
+                    <td style="text-align: right;">
+                      <span style="font-size: 13px; font-weight: 700; color: #0A1F44;">KES ${mpesaRevenue.toLocaleString()}</span>
+                      <span style="font-size: 11px; color: #6B7280; margin-left: 8px;">${mpesaOrders.length} orders</span>
+                    </td>
+                  </tr>
+                </table>
               </div>
-              <div style="display: flex; justify-content: space-between;">
-                <span style="font-size: 13px; color: #374151;">💵 Cash</span>
-                <div style="text-align: right;">
-                  <span style="font-size: 13px; font-weight: 700; color: #0A1F44;">KES ${cashRevenue.toLocaleString()}</span>
-                  <span style="font-size: 11px; color: #6B7280; margin-left: 8px;">${cashOrders.length} orders</span>
-                </div>
-              </div>
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="font-size: 13px; color: #374151;">💵 Cash</td>
+                  <td style="text-align: right;">
+                    <span style="font-size: 13px; font-weight: 700; color: #0A1F44;">KES ${cashRevenue.toLocaleString()}</span>
+                    <span style="font-size: 11px; color: #6B7280; margin-left: 8px;">${cashOrders.length} orders</span>
+                  </td>
+                </tr>
+              </table>
             </div>
 
             ${lowStockHTML}
@@ -126,16 +144,18 @@ const sendDailyReport = async () => {
       </html>
     `
 
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: 'Siradify POS <onboarding@resend.dev>',
-      to: process.env.REPORT_EMAIL,
+      to: 'awsirloved2@gmail.com',
       subject: `Siradify Daily Report - ${dateStr} - KES ${totalRevenue.toLocaleString()}`,
       html,
     })
 
-    console.log('Daily report sent successfully')
+    console.log('Daily report sent:', result)
+
   } catch (error) {
     console.error('Failed to send daily report:', error)
+    throw error
   }
 }
 
