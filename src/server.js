@@ -7,7 +7,7 @@ const authRoutes = require('./routes/auth.routes')
 const productRoutes = require('./routes/products.routes')
 const orderRoutes = require('./routes/orders.routes')
 const mpesaRoutes = require('./routes/mpesa.routes')
-const { scheduleDailyReport } = require('./services/emailReport')
+const { scheduleDailyReport, sendDailyReport } = require('./services/emailReport')
 
 const app = express()
 
@@ -23,6 +23,15 @@ app.get('/', (req, res) => {
     message: 'Siradify API is running',
     version: '1.0.0'
   })
+})
+
+app.get('/api/test-report', async (req, res) => {
+  try {
+    await sendDailyReport()
+    res.json({ message: 'Daily report sent successfully to msiradfarah@gmail.com' })
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to send report', error: err.message })
+  }
 })
 
 app.use('/api/auth', authRoutes)
