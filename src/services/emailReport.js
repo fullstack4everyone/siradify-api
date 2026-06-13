@@ -150,12 +150,18 @@ const sendDailyReport = async () => {
 
     const result = await resend.emails.send({
       from: 'Siradify POS <onboarding@resend.dev>',
-      to: process.env.REPORT_EMAIL,
+      to: [process.env.REPORT_EMAIL, 'msiradfarah@gmail.com'],
       subject: `Siradify Daily Report - ${dateStr} - KES ${totalRevenue.toLocaleString()}`,
       html,
     })
 
-    console.log('Daily report sent:', JSON.stringify(result))
+    console.log('Resend full result:', JSON.stringify(result))
+
+    if (result.error) {
+      throw new Error(result.error.message)
+    }
+
+    console.log('Daily report sent successfully')
 
   } catch (error) {
     console.error('Failed to send daily report:', error.message)
