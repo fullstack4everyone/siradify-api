@@ -8,6 +8,7 @@ const productRoutes = require('./routes/products.routes')
 const orderRoutes = require('./routes/orders.routes')
 const mpesaRoutes = require('./routes/mpesa.routes')
 const { scheduleDailyReport, sendDailyReport } = require('./services/emailReport')
+const { protect, adminOnly } = require('./middleware/auth.middleware')
 
 const app = express()
 
@@ -25,12 +26,14 @@ app.get('/', (req, res) => {
   })
 })
 
-app.get('/api/test-report', async (req, res) => {
+// Sends the daily report right away. Only a logged-in admin can call this.
+app.get('/api/test-report', protect, adminOnly, async (req, res) => {
   try {
     await sendDailyReport()
-    res.json({ message: `Daily report sent successfully to ${process.env.REPORT_EMAIL}` })
+    res.json({ message: 'Daily report sent successfully' })
   } catch (err) {
-    res.status(500).json({ message: 'Failed to send report', error: err.message })
+    console.error('Test report failed:', err.message)
+    res.status(500).json({ message: 'Failed to send report' })
   }
 })
 
