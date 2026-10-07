@@ -150,7 +150,9 @@ const sendDailyReport = async () => {
 
     const result = await resend.emails.send({
       from: 'Siradify POS <onboarding@resend.dev>',
-      to: [process.env.REPORT_EMAIL, 'msiradfarah@gmail.com'],
+      // Without a verified domain, Resend only delivers to the account owner's email.
+      // Add more recipients here only after you verify a domain at resend.com/domains.
+      to: [process.env.REPORT_EMAIL],
       subject: `Siradify Daily Report - ${dateStr} - KES ${totalRevenue.toLocaleString()}`,
       html,
     })
